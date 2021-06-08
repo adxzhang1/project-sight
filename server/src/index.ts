@@ -1,6 +1,7 @@
 import express, { ErrorRequestHandler } from 'express';
-import * as ENV from './env';
 import mongoose from 'mongoose';
+import cors from 'cors';
+import * as ENV from './env';
 import { categoriesRouter, goalsRouter } from './routes';
 
 const app = express();
@@ -15,6 +16,7 @@ const main = async () => {
   // --- setup express ---
 
   // config
+  app.use(cors());
   app.use(express.json());
 
   // routes

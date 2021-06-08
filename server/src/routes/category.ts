@@ -2,14 +2,19 @@ import { RequestHandler, Router } from 'express';
 import { CategoryModel, GoalModel } from '../models';
 
 class CategoriesController {
-  static get: RequestHandler = async (req, res, next) => {
-    try {
-      const categories = await CategoryModel.find();
-      res.status(200).json(categories);
-    } catch (err) {
-      next(err);
-    }
-  };
+  static get: RequestHandler<any, any, any, { includeGoals?: boolean }> =
+    async (req, res, next) => {
+      try {
+        let categoriesPromise = CategoryModel.find();
+        if (req.query.includeGoals) {
+          categoriesPromise = categoriesPromise.populate('goals');
+        }
+        const categories = await categoriesPromise;
+        res.status(200).json(categories);
+      } catch (err) {
+        next(err);
+      }
+    };
 
   static create: RequestHandler = async (req, res, next) => {
     try {

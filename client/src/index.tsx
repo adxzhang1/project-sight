@@ -1,14 +1,18 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { useTest } from './use-test';
+import { CategorySection } from './components/category-section';
+import { useFoo } from './use-foo';
 
 const App = () => {
-  const { count, setCount } = useTest();
+  const { categories, loading } = useFoo();
+
   return (
     <div>
-      <h1>Hi</h1>
-      <p>{count}</p>
-      <button onClick={() => setCount(count + 1)}>+</button>
+      {loading ? (
+        <p>loading...</p>
+      ) : (
+        categories.map((category) => <CategorySection category={category} />)
+      )}
     </div>
   );
 };

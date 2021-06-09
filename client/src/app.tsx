@@ -67,6 +67,7 @@ export const App = () => {
             placement="right"
             content={
               <NewCategoryCreator
+                shouldFocus={isNewOpen}
                 onAdd={(category) => {
                   setIsNewOpen(false);
                   addCategory(category);

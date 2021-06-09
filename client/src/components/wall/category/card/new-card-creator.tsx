@@ -99,7 +99,6 @@ const AddGoalCard = styled(GoalCardBase)`
   display: flex;
   align-items: center;
   white-space: nowrap;
-  margin-left: 0.5rem;
 
   & > *:not(:last-child) {
     margin-right: 6px;

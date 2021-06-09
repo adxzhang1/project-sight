@@ -4,6 +4,14 @@ import { Category, Goal } from '../types';
 import * as ENV from '../env';
 import { useAuth } from './use-auth';
 
+const reorder = <T>(list: T[], startIndex: number, endIndex: number) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
 export interface CreateCategoryParams {
   name: string;
 }
@@ -105,10 +113,43 @@ const useCategory = ({
     }
   };
 
+  const reorderGoals = async (
+    categoryId: string,
+    source: number,
+    dest: number
+  ) => {
+    try {
+      let updatedGoals: Goal[] = [];
+      const updatedCategories = categories.map((category) => {
+        if (category._id === categoryId) {
+          updatedGoals = reorder(category.goals, source, dest);
+          return {
+            ...category,
+            goals: updatedGoals,
+          };
+        }
+        return category;
+      });
+      setCategories(updatedCategories);
+
+      if (!updatedGoals.length) {
+        return;
+      }
+
+      updateCategory(categoryId, {
+        goals: updatedGoals.map(({ _id }) => _id),
+      });
+    } catch (err) {
+      setCategories(categories);
+      onError(err);
+    }
+  };
+
   return {
     addCategory,
     deleteCategory,
     updateCategory,
+    reorderGoals,
   };
 };
 
@@ -280,12 +321,13 @@ export const useManager = () => {
     };
   }, [handleError, token]);
 
-  const { addCategory, deleteCategory, updateCategory } = useCategory({
-    token,
-    categories,
-    setCategories,
-    onError: handleError,
-  });
+  const { addCategory, deleteCategory, updateCategory, reorderGoals } =
+    useCategory({
+      token,
+      categories,
+      setCategories,
+      onError: handleError,
+    });
 
   const { addGoal, deleteGoal, updateGoal } = useGoal({
     token,
@@ -305,5 +347,6 @@ export const useManager = () => {
     addGoal,
     deleteGoal,
     updateGoal,
+    reorderGoals,
   };
 };

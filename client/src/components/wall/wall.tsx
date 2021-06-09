@@ -1,6 +1,14 @@
 import React from 'react';
 import { CategorySection, OpenNewCategoryButton } from './category';
 import { useManager, useAuthRedirect } from '../../hooks';
+import styled from 'styled-components';
+
+const WallBase = styled.div`
+  display: flex;
+  align-items: flex-start;
+  overflow-x: auto;
+  padding-bottom: 6rem;
+`;
 
 export const Wall = () => {
   useAuthRedirect();
@@ -16,10 +24,11 @@ export const Wall = () => {
     addCategory,
     deleteCategory,
     updateCategory,
+    reorderGoals,
   } = useManager();
 
   return (
-    <div>
+    <WallBase>
       {loading ? (
         <p>loading...</p>
       ) : (
@@ -35,8 +44,12 @@ export const Wall = () => {
               }
               deleteCategory={() => deleteCategory(category._id)}
               updateCategory={(params) => updateCategory(category._id, params)}
+              reorderGoals={(source, dest) =>
+                reorderGoals(category._id, source, dest)
+              }
             />
           ))}
+
           <OpenNewCategoryButton
             isOpen={isNewOpen}
             onClick={() => setIsNewOpen(true)}
@@ -48,6 +61,6 @@ export const Wall = () => {
           />
         </React.Fragment>
       )}
-    </div>
+    </WallBase>
   );
 };

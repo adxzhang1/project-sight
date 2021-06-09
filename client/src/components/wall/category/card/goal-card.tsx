@@ -12,8 +12,6 @@ export const GoalCardBase = styled.div`
   }
 
   padding: 0.4rem 01.2rem;
-  margin-right: 0.5rem;
-  margin-bottom: 0.8rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   background-color: white;
@@ -45,7 +43,7 @@ export const GoalCard: FC<GoalCardProps> = ({ goal, onUpdate, onDelete }) => {
         placement="right"
       >
         <GoalCardBase onClick={() => setIsDetailsOpen(true)}>
-          <p>{goal.title}</p>
+          <p style={{ overflowWrap: 'anywhere' }}>{goal.title}</p>
         </GoalCardBase>
       </Popover>
       <UpdateCardModal

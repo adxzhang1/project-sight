@@ -42,6 +42,7 @@ export const UpdateCategory: FC<UpdateCategoryProps> = ({
         color="white"
         backgroundColor={CONSTANTS.PRIMARY_COLOR}
         onClick={() => onSubmit(data)}
+        tabIndex={0}
       >
         Save
       </FlatButton>

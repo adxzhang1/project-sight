@@ -47,6 +47,7 @@ export const UpdateCard: FC<UpdateCardProps> = ({ goal, onSubmit }) => {
         color="white"
         backgroundColor={CONSTANTS.SECONDARY_COLOR}
         onClick={() => onSubmit(data)}
+        tabIndex={0}
       >
         Save
       </FlatButton>

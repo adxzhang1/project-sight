@@ -113,6 +113,10 @@ const AddCategoryBase = styled(CategorySectionBase)`
   }
 `;
 
+const NewCategoryButtonBase = styled(AddCategoryBase)`
+  width: 16rem;
+`;
+
 interface OpenNewCategoryButtonProps {
   isOpen: boolean;
   onClick: () => any;
@@ -138,10 +142,10 @@ export const OpenNewCategoryButton: FC<OpenNewCategoryButtonProps> = ({
         />
       }
     >
-      <AddCategoryBase onClick={onClick}>
+      <NewCategoryButtonBase onClick={onClick}>
         <p>New Category</p>
         <PlusOutlined />
-      </AddCategoryBase>
+      </NewCategoryButtonBase>
     </Popover>
   );
 };

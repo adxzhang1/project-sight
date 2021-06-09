@@ -22,19 +22,17 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        loader: 'ts-loader',
         exclude: /node_modules/,
+        options: {
+          transpileOnly: true,
+        },
       },
-      // {
-      //   test: /.(js|jsx)$/,
-      //   exclude: /node_modules/,
-      //   use: {
-      //     loader: 'babel-loader',
-      //     options: {
-      //       presets: ['@babel/preset-env', '@babel/preset-react'],
-      //     },
-      //   },
-      // },
+      {
+        test: /\.s?css$/,
+        use: ['style-loader', 'css-loader'],
+        // exclude: /node_modules/,
+      },
     ],
   },
   resolve: {

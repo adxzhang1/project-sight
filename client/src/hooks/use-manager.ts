@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { Category, Goal } from '../types';
 import * as ENV from '../env';
+import { useAuth } from './use-auth';
 
 export interface GoalParams {
   title: string;
@@ -13,33 +14,67 @@ export interface CategoryParams {
 }
 
 export const useManager = () => {
+  const { logout, token } = useAuth();
   const [loading, setLoading] = useState(true);
   const [isNewOpen, setIsNewOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
 
+  const checkAuthError = useCallback(
+    (err: any) => {
+      if (err.response?.status == 401) {
+        logout();
+      }
+    },
+    [logout]
+  );
+
   useEffect(() => {
+    if (!token) {
+      return;
+    }
+
+    let canUpdate = true;
+
     const init = async () => {
       setLoading(true);
 
       try {
         const res = await axios.get<any, AxiosResponse<Category[]>>(
-          ENV.API_URL + '/categories?includeGoals=true'
+          ENV.API_URL + '/categories?includeGoals=true',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
-        setCategories(res.data);
+        if (canUpdate) {
+          setCategories(res.data);
+        }
       } catch (err) {
-        console.log(err);
+        checkAuthError(err);
       } finally {
-        setLoading(false);
+        if (canUpdate) {
+          setLoading(false);
+        }
       }
     };
     init();
-  }, []);
+
+    return () => {
+      canUpdate = false;
+    };
+  }, [checkAuthError, token]);
 
   const addGoal = async (goal: GoalParams, categoryId: string) => {
     try {
       const res = await axios.post<any, AxiosResponse<Goal>>(
         ENV.API_URL + '/goals',
-        { ...goal, categoryId }
+        { ...goal, categoryId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setCategories(
         categories.map((category) => {
@@ -53,13 +88,17 @@ export const useManager = () => {
         })
       );
     } catch (err) {
-      console.log(err);
+      checkAuthError(err);
     }
   };
 
   const deleteGoal = async (goalId: string, categoryId: string) => {
     try {
-      await axios.delete(ENV.API_URL + '/goals/' + goalId);
+      await axios.delete(ENV.API_URL + '/goals/' + goalId, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setCategories(
         categories.map((category) => {
@@ -72,33 +111,40 @@ export const useManager = () => {
           return category;
         })
       );
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const addCategory = async (category: CategoryParams) => {
     try {
       const res = await axios.post<any, AxiosResponse<Category>>(
         ENV.API_URL + '/categories',
-        category
+        category,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       setCategories([...categories, res.data]);
     } catch (err) {
-      console.log(err);
+      checkAuthError(err);
     }
   };
 
   const deleteCategory = async (categoryId: string) => {
     try {
-      await axios.delete(ENV.API_URL + '/categories/' + categoryId);
+      await axios.delete(ENV.API_URL + '/categories/' + categoryId, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setCategories(
         categories.filter((category) => category._id !== categoryId)
       );
     } catch (err) {
-      console.log(err);
+      checkAuthError(err);
     }
   };
 

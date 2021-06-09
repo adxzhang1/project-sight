@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import { Category } from '../types';
+import { Category } from '../../types';
 import { GoalCard, GoalCardBase } from './goal-card';
-import { useCategorySection } from '../hooks';
+import { useCategorySection } from '../../hooks';
 import { Button, Popover } from 'antd';
-import { GoalParams } from '../hooks/use-manager';
+import { GoalParams } from '../../hooks/use-manager';
 import { NewCardCreator } from './new-card-creator';
 import {
   PlusOutlined,
@@ -13,7 +13,7 @@ import {
   DeleteOutlined,
 } from '@ant-design/icons';
 import { Spacer } from './layout';
-import * as CONSTANTS from '../constants';
+import * as CONSTANTS from '../../constants';
 
 const CategoryActionButton = styled(Button)`
   &:not(:last-child) {

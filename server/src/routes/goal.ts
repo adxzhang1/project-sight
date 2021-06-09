@@ -1,5 +1,6 @@
 import { CategoryModel, GoalModel } from '../models';
 import { Router, RequestHandler } from 'express';
+import { AuthController } from './auth';
 
 class GoalsController {
   static get: RequestHandler = async (req, res, next) => {
@@ -97,6 +98,8 @@ class GoalsController {
 }
 
 const router = Router();
+
+router.use(AuthController.verify);
 
 router.get('/', GoalsController.get);
 router.post('/', GoalsController.create);

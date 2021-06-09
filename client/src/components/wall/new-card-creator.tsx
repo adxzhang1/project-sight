@@ -1,36 +1,37 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { useOutsideDetector } from '../hooks';
-import { Input } from 'antd';
-import { CategoryParams } from '../hooks/use-manager';
+import { useOutsideDetector } from '../../hooks';
+import { Button, Input, Popover } from 'antd';
+import { GoalParams } from '../../hooks/use-manager';
 import { FlatButton } from './buttons';
-import * as CONSTANTS from '../constants';
+import * as CONSTANTS from '../../constants';
 
-const NewCategoryInput = styled(Input)`
+const NewCardInput = styled(Input)`
   max-width: 20rem;
 `;
 
-const NewCategoryCreatorBack = styled.div`
+const NewCardCreatorBack = styled.div`
   display: flex;
+  align-items: center;
 
   & > *:not(:last-child) {
     margin-right: 0.5rem;
   }
 `;
 
-const NewCategoryButton = styled(FlatButton)`
-  background-color: ${CONSTANTS.PRIMARY_COLOR};
+const NewCardButton = styled(FlatButton)`
+  background-color: ${CONSTANTS.SECONDARY_COLOR};
   color: white;
   font-weight: bold;
 `;
 
-interface NewCategoryCreatorProps {
-  onAdd: (category: CategoryParams) => void;
+interface NewCardCreatorProps {
+  onAdd: (goal: GoalParams) => void;
   onCancel: () => void;
   shouldFocus?: boolean;
 }
 
-export const NewCategoryCreator: FC<NewCategoryCreatorProps> = ({
+export const NewCardCreator: FC<NewCardCreatorProps> = ({
   onAdd,
   onCancel,
   shouldFocus,
@@ -52,37 +53,37 @@ export const NewCategoryCreator: FC<NewCategoryCreatorProps> = ({
     };
   }, [shouldFocus]);
 
-  const [name, setName] = useState('');
+  const [title, setTitle] = useState('');
 
   const add = () => {
-    onAdd({ name });
-    setName('');
+    onAdd({ title });
+    setTitle('');
   };
 
   return (
-    <NewCategoryCreatorBack ref={ref}>
-      <NewCategoryInput
+    <NewCardCreatorBack ref={ref}>
+      <NewCardInput
         ref={inputRef}
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Enter a name"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
         onKeyDown={(e) => {
           if (e.key.toLowerCase() == 'enter') {
             add();
           }
         }}
+        placeholder="Enter a title"
       />
-      <NewCategoryButton
+      <NewCardButton
         onClick={add}
+        tabIndex={0}
         onKeyDown={(e) => {
           if (e.key.toLowerCase() == 'enter') {
             add();
           }
         }}
-        tabIndex={0}
       >
         Add
-      </NewCategoryButton>
-    </NewCategoryCreatorBack>
+      </NewCardButton>
+    </NewCardCreatorBack>
   );
 };

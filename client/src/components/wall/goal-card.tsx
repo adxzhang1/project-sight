@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Goal } from '../types';
+import { Goal } from '../../types';
 import styled from 'styled-components';
 import { Button, Modal, Popover } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';

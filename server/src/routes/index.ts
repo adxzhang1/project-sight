@@ -1,3 +1,4 @@
 import goalsRouter from './goal';
 import categoriesRouter from './category';
-export { goalsRouter, categoriesRouter };
+import authRouter from './auth';
+export { goalsRouter, categoriesRouter, authRouter };

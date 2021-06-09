@@ -2,7 +2,7 @@ import express, { ErrorRequestHandler } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import * as ENV from './env';
-import { categoriesRouter, goalsRouter } from './routes';
+import { authRouter, categoriesRouter, goalsRouter } from './routes';
 
 const app = express();
 
@@ -20,6 +20,7 @@ const main = async () => {
   app.use(express.json());
 
   // routes
+  app.use('/auth', authRouter);
   app.use('/goals', goalsRouter);
   app.use('/categories', categoriesRouter);
 

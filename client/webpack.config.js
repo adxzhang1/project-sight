@@ -44,5 +44,8 @@ module.exports = {
     publicPath: '/',
     compress: true,
     hot: true,
+    historyApiFallback: {
+      index: 'index.html',
+    },
   },
 };

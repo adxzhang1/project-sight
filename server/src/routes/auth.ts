@@ -1,11 +1,11 @@
 import { RequestHandler, Router } from 'express';
-import { User, UserDocument, UserModel } from '../models';
 import bcrypt from 'bcrypt';
+import { UserDocument, UserModel } from '../models';
 import jwt from 'jsonwebtoken';
 import * as ENV from '../env';
 
 interface TokenData {
-  id: string;
+  userId: string;
 }
 
 export class AuthController {
@@ -77,7 +77,7 @@ export class AuthController {
 
       const token = jwt.sign(
         {
-          id: user._id,
+          userId: user._id,
         },
         ENV.JWT_SECRET,
         { expiresIn: 60 * 60 }
@@ -101,7 +101,7 @@ export class AuthController {
       }
 
       const decoded = jwt.verify(token, ENV.JWT_SECRET) as TokenData;
-      res.locals.id = decoded.id;
+      res.locals.userId = decoded.userId;
 
       next();
     } catch (err) {

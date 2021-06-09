@@ -6,7 +6,7 @@ class CategoriesController {
   static get: RequestHandler<any, any, any, { includeGoals?: boolean }> =
     async (req, res, next) => {
       try {
-        let categoriesPromise = CategoryModel.find();
+        let categoriesPromise = CategoryModel.find({ user: res.locals.userId });
         if (req.query.includeGoals) {
           categoriesPromise = categoriesPromise.populate('goals');
         }
@@ -19,7 +19,10 @@ class CategoriesController {
 
   static create: RequestHandler = async (req, res, next) => {
     try {
-      const category = await CategoryModel.create(req.body);
+      const category = await CategoryModel.create({
+        ...req.body,
+        user: res.locals.userId,
+      });
       res.status(200).json(category);
     } catch (err) {
       next(err);
@@ -28,7 +31,10 @@ class CategoriesController {
 
   static update: RequestHandler<{ id: string }> = async (req, res, next) => {
     try {
-      await CategoryModel.findOneAndUpdate({ _id: req.params.id }, req.body);
+      await CategoryModel.findOneAndUpdate(
+        { _id: req.params.id, user: res.locals.userId },
+        req.body
+      );
       res.status(200).json({});
     } catch (err) {
       next(err);
@@ -37,7 +43,10 @@ class CategoriesController {
 
   static delete: RequestHandler<{ id: string }> = async (req, res, next) => {
     try {
-      const category = await CategoryModel.findOne({ _id: req.params.id });
+      const category = await CategoryModel.findOne({
+        _id: req.params.id,
+        user: res.locals.userId,
+      });
 
       if (!category) {
         return res.status(200).json({});

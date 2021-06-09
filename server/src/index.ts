@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import * as ENV from './env';
 import { authRouter, categoriesRouter, goalsRouter } from './routes';
+import { UserModel, CategoryModel, GoalModel } from './models';
 
 const app = express();
 
@@ -12,6 +13,13 @@ const main = async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
+
+  // setup indexes
+  await Promise.all([
+    UserModel.createIndexes(),
+    CategoryModel.createIndexes(),
+    GoalModel.createIndexes(),
+  ]);
 
   // --- setup express ---
 

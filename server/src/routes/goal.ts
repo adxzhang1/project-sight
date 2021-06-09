@@ -5,7 +5,7 @@ import { AuthController } from './auth';
 class GoalsController {
   static get: RequestHandler = async (req, res, next) => {
     try {
-      const goals = await GoalModel.find();
+      const goals = await GoalModel.find({ user: res.locals.userId });
       res.status(200).json(goals);
     } catch (err) {
       next(err);
@@ -17,6 +17,7 @@ class GoalsController {
       // get the category
       const category = await CategoryModel.findOne({
         _id: req.body.categoryId,
+        user: res.locals.userId,
       });
       if (!category) {
         throw {
@@ -27,7 +28,10 @@ class GoalsController {
       }
 
       // create the goal
-      const goal = await GoalModel.create(req.body);
+      const goal = await GoalModel.create({
+        ...req.body,
+        user: res.locals.userId,
+      });
 
       // update the category
       category.goals.push(goal.id);
@@ -61,7 +65,10 @@ class GoalsController {
 
   static delete: RequestHandler<{ id: string }> = async (req, res, next) => {
     try {
-      const goal = await GoalModel.findOne({ _id: req.params.id });
+      const goal = await GoalModel.findOne({
+        _id: req.params.id,
+        user: res.locals.userId,
+      });
 
       if (!goal) {
         return res.status(200).json({});
@@ -89,7 +96,10 @@ class GoalsController {
 
   static update: RequestHandler<{ id: string }> = async (req, res, next) => {
     try {
-      await GoalModel.findOneAndUpdate({ _id: req.params.id }, req.body);
+      await GoalModel.findOneAndUpdate(
+        { _id: req.params.id, user: res.locals.userId },
+        req.body
+      );
       res.status(200).json({});
     } catch (err) {
       next(err);

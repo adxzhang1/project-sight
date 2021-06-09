@@ -1,11 +1,13 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { useOutsideDetector } from '../../hooks';
-import { Button, Input, Popover } from 'antd';
-import { GoalParams } from '../../hooks/use-manager';
-import { FlatButton } from './buttons';
-import * as CONSTANTS from '../../constants';
+import { Input, Popover } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { useOutsideDetector, CreateGoalParams } from '../../../../hooks';
+import { FlatButton } from '../../buttons';
+import * as CONSTANTS from '../../../../constants';
+import { GoalCardBase } from './goal-card';
 
+// --- New card display ---
 const NewCardInput = styled(Input)`
   max-width: 20rem;
 `;
@@ -26,7 +28,7 @@ const NewCardButton = styled(FlatButton)`
 `;
 
 interface NewCardCreatorProps {
-  onAdd: (goal: GoalParams) => void;
+  onAdd: (goal: CreateGoalParams) => void;
   onCancel: () => void;
   shouldFocus?: boolean;
 }
@@ -85,5 +87,54 @@ export const NewCardCreator: FC<NewCardCreatorProps> = ({
         Add
       </NewCardButton>
     </NewCardCreatorBack>
+  );
+};
+
+// --- New card button ---
+const AddGoalCard = styled(GoalCardBase)`
+  background-color: ${CONSTANTS.SECONDARY_COLOR};
+  color: white;
+  align-self: center;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  margin-left: 0.5rem;
+
+  & > *:not(:last-child) {
+    margin-right: 6px;
+  }
+`;
+
+interface OpenNewCardButtonProps {
+  isOpen: boolean;
+  onClick: () => any;
+  onAdd: (category: CreateGoalParams) => any;
+  onCancel: () => any;
+}
+
+export const OpenNewCardButton: FC<OpenNewCardButtonProps> = ({
+  isOpen,
+  onClick,
+  onAdd,
+  onCancel,
+}) => {
+  return (
+    <Popover
+      visible={isOpen}
+      placement="left"
+      content={
+        <NewCardCreator
+          shouldFocus={isOpen}
+          onAdd={onAdd}
+          onCancel={onCancel}
+        />
+      }
+    >
+      <AddGoalCard onClick={onClick}>
+        <p>Add Goal</p>
+        <PlusOutlined />
+      </AddGoalCard>
+    </Popover>
   );
 };

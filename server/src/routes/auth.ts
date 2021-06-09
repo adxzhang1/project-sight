@@ -13,7 +13,7 @@ export class AuthController {
     try {
       const { email, password } = req.body;
 
-      if (!password || password.length < 6) {
+      if (!password) {
         throw {
           isCustom: true,
           statusCode: 400,
@@ -98,6 +98,16 @@ export class AuthController {
           statusCode: 401,
           message: 'no token provided',
         };
+      }
+
+      // development only
+      if (ENV.NODE_ENV === 'development' && token === ENV.ADMIN_TOKEN) {
+        const user = await UserModel.findOne({ email: 'admin@admin.com' });
+        if (!user) {
+          throw Error();
+        }
+        res.locals.userId = user._id;
+        return next();
       }
 
       const decoded = jwt.verify(token, ENV.JWT_SECRET) as TokenData;

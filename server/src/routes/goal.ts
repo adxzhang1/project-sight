@@ -94,12 +94,27 @@ class GoalsController {
     }
   };
 
-  static update: RequestHandler<{ id: string }> = async (req, res, next) => {
+  static update: RequestHandler<
+    { id: string },
+    any,
+    any,
+    { shouldReturn?: boolean }
+  > = async (req, res, next) => {
     try {
       await GoalModel.findOneAndUpdate(
         { _id: req.params.id, user: res.locals.userId },
         req.body
       );
+
+      // return updated category
+      if (req.query.shouldReturn) {
+        const goal = await GoalModel.findOne({
+          _id: req.params.id,
+          user: res.locals.userId,
+        });
+        return res.status(200).json(goal);
+      }
+
       res.status(200).json({});
     } catch (err) {
       next(err);

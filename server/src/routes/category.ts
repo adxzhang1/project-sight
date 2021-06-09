@@ -29,12 +29,31 @@ class CategoriesController {
     }
   };
 
-  static update: RequestHandler<{ id: string }> = async (req, res, next) => {
+  static update: RequestHandler<
+    { id: string },
+    any,
+    any,
+    { shouldReturn?: boolean; includeGoals?: boolean }
+  > = async (req, res, next) => {
     try {
       await CategoryModel.findOneAndUpdate(
         { _id: req.params.id, user: res.locals.userId },
         req.body
       );
+
+      // return updated category
+      if (req.query.shouldReturn) {
+        let categoryPromise = CategoryModel.findOne({
+          _id: req.params.id,
+          user: res.locals.userId,
+        });
+        if (req.query.includeGoals) {
+          categoryPromise = categoryPromise.populate('goals');
+        }
+        const category = await categoryPromise;
+        return res.status(200).json(category);
+      }
+
       res.status(200).json({});
     } catch (err) {
       next(err);
@@ -75,6 +94,7 @@ router.use(AuthController.verify);
 
 router.get('/', CategoriesController.get);
 router.post('/', CategoriesController.create);
+router.patch('/:id', CategoriesController.update);
 router.delete('/:id', CategoriesController.delete);
 
 export default router;

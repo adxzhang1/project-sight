@@ -9,3 +9,7 @@ export const Spacer = styled.div<SpacerProps>`
   margin-top: ${(props) => props.height || 0} !important;
   margin-left: ${(props) => props.width || 0} !important;
 `;
+
+export const Container = styled.div`
+  margin: 0 1rem;
+`;

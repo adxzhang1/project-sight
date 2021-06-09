@@ -1,17 +1,26 @@
-import React from 'react';
-import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { Input } from 'antd';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth, useAuthRedirect } from '../../hooks';
-import { Login } from './login';
-import { Signup } from './signup';
+import { Spacer } from '../layout';
+import { FlatButton } from '../wall/buttons';
+import * as CONSTANTS from '../../constants';
 
 export const Auth = () => {
-  const history = useHistory();
-  const match = useRouteMatch();
+  const { pathname } = useLocation();
   const { login, signup } = useAuth();
   useAuthRedirect();
 
-  const switchAuth = (to: string) => {
-    history.push(match.path + to);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const isSignup = pathname.endsWith('/signup');
+
+  const submit = () => {
+    if (isSignup) {
+      return signup(email, password);
+    }
+    login(email, password);
   };
 
   return (
@@ -24,19 +33,41 @@ export const Auth = () => {
         margin: '0 auto',
       }}
     >
-      <Switch>
-        <Route
-          path={`${match.path}/signup`}
-          render={() => (
-            <Signup signup={signup} switchAuth={() => switchAuth('/')} />
-          )}
+      <div>
+        <Input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="email"
         />
-        <Route
-          render={() => (
-            <Login login={login} switchAuth={() => switchAuth('/signup')} />
-          )}
+        <Spacer height="1rem" />
+        <Input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="password"
+          type="password"
         />
-      </Switch>
+
+        <Spacer height="1rem" />
+        <FlatButton
+          color="white"
+          backgroundColor={CONSTANTS.PRIMARY_COLOR}
+          onClick={submit}
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key.toLowerCase() == 'enter') {
+              submit();
+            }
+          }}
+        >
+          {isSignup ? 'Sign Up' : 'Login'}
+        </FlatButton>
+        <Spacer height=".5rem" />
+        <div>
+          <Link to={isSignup ? '/auth' : '/auth/signup'}>
+            {isSignup ? 'Already have an account?' : 'Create an account'}
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,11 +1,13 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { useOutsideDetector } from '../../hooks';
-import { Input } from 'antd';
-import { CategoryParams } from '../../hooks/use-manager';
-import { FlatButton } from './buttons';
-import * as CONSTANTS from '../../constants';
+import { Input, Popover } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { useOutsideDetector, CreateCategoryParams } from '../../../hooks';
+import { FlatButton } from '../buttons';
+import * as CONSTANTS from '../../../constants';
+import { CategorySectionBase } from './category-section';
 
+// --- New Category Display ---
 const NewCategoryInput = styled(Input)`
   max-width: 20rem;
 `;
@@ -25,7 +27,7 @@ const NewCategoryButton = styled(FlatButton)`
 `;
 
 interface NewCategoryCreatorProps {
-  onAdd: (category: CategoryParams) => void;
+  onAdd: (category: CreateCategoryParams) => void;
   onCancel: () => void;
   shouldFocus?: boolean;
 }
@@ -84,5 +86,62 @@ export const NewCategoryCreator: FC<NewCategoryCreatorProps> = ({
         Add
       </NewCategoryButton>
     </NewCategoryCreatorBack>
+  );
+};
+
+// --- Open New Category Display ---
+const AddCategoryBase = styled(CategorySectionBase)`
+  * {
+    margin: 0;
+  }
+
+  display: inline-flex;
+  align-items: center;
+  background-color: ${CONSTANTS.PRIMARY_COLOR};
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1.5rem;
+  margin-top: 0;
+
+  & > *:not(:last-child) {
+    margin-right: 6px;
+  }
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
+`;
+
+interface OpenNewCategoryButtonProps {
+  isOpen: boolean;
+  onClick: () => any;
+  onAdd: (category: CreateCategoryParams) => any;
+  onCancel: () => any;
+}
+
+export const OpenNewCategoryButton: FC<OpenNewCategoryButtonProps> = ({
+  isOpen,
+  onClick,
+  onAdd,
+  onCancel,
+}) => {
+  return (
+    <Popover
+      visible={isOpen}
+      placement="right"
+      content={
+        <NewCategoryCreator
+          shouldFocus={isOpen}
+          onAdd={onAdd}
+          onCancel={onCancel}
+        />
+      }
+    >
+      <AddCategoryBase onClick={onClick}>
+        <p>New Category</p>
+        <PlusOutlined />
+      </AddCategoryBase>
+    </Popover>
   );
 };

@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { Goal } from './goal';
+import { Goal, GoalModel } from './goal';
 import { User } from './user';
 
 export interface Category {
@@ -22,6 +22,16 @@ const categorySchema = new Schema<Category>({
     ref: 'user',
     required: true,
   },
+});
+
+categorySchema.post('remove', async function () {
+  try {
+    await Promise.all(
+      (this.goals as string[]).map((id) => GoalModel.deleteOne({ _id: id }))
+    );
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 export const CategoryModel = model<Category>('category', categorySchema);

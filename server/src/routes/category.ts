@@ -53,14 +53,14 @@ class CategoriesController {
       }
 
       // delete the goals
-      await Promise.all(
-        (category.goals as string[]).map((id) =>
-          GoalModel.deleteOne({ _id: id })
-        )
-      );
+      // await Promise.all(
+      //   (category.goals as string[]).map((id) =>
+      //     GoalModel.deleteOne({ _id: id })
+      //   )
+      // );
 
       // delete the category
-      await category.delete();
+      await category.remove();
 
       res.status(200).json({});
     } catch (err) {

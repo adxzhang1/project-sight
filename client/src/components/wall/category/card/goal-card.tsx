@@ -47,6 +47,7 @@ export const GoalCard: FC<GoalCardProps> = ({ goal, onUpdate, onDelete }) => {
   return (
     <React.Fragment>
       <Popover
+        className="behind"
         content={
           <GoalCardActions
             isComplete={goal.isComplete}
@@ -55,6 +56,7 @@ export const GoalCard: FC<GoalCardProps> = ({ goal, onUpdate, onDelete }) => {
             onDelete={onDelete}
           />
         }
+        // trigger="click"
         placement="right"
       >
         <GoalCardBase onClick={() => setIsDetailsOpen(true)}>

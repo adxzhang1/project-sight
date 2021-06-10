@@ -29,6 +29,10 @@ export const UpdateCard: FC<UpdateCardProps> = ({ goal, onSubmit }) => {
     });
   };
 
+  const submit = () => {
+    onSubmit(data);
+  };
+
   return (
     <div>
       <UpdateCardInput
@@ -46,8 +50,13 @@ export const UpdateCard: FC<UpdateCardProps> = ({ goal, onSubmit }) => {
       <FlatButton
         color="white"
         backgroundColor={CONSTANTS.SECONDARY_COLOR}
-        onClick={() => onSubmit(data)}
+        onClick={submit}
         tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key.toLowerCase() == 'enter') {
+            submit();
+          }
+        }}
       >
         Save
       </FlatButton>

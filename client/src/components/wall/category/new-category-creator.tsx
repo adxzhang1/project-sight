@@ -114,7 +114,7 @@ const AddCategoryBase = styled(CategorySectionBase)`
 `;
 
 const NewCategoryButtonBase = styled(AddCategoryBase)`
-  width: 16rem;
+  width: auto;
 `;
 
 interface OpenNewCategoryButtonProps {

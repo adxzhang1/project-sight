@@ -2,6 +2,7 @@ import React from 'react';
 import { CategorySection, OpenNewCategoryButton } from './category';
 import { useManager, useAuthRedirect } from '../../hooks';
 import styled from 'styled-components';
+import { Summary } from './summary';
 
 const WallBase = styled.div`
   display: flex;
@@ -59,6 +60,8 @@ export const Wall = () => {
             }}
             onCancel={() => setIsNewOpen(false)}
           />
+
+          <Summary categories={categories} />
         </React.Fragment>
       )}
     </WallBase>

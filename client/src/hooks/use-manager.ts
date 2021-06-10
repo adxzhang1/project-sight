@@ -29,6 +29,7 @@ export interface CreateGoalParams {
 export interface UpdateGoalParams {
   title?: string;
   description?: string;
+  isComplete?: boolean;
 }
 
 // --- Category ---

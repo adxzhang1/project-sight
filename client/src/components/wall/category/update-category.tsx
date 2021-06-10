@@ -31,6 +31,10 @@ export const UpdateCategory: FC<UpdateCategoryProps> = ({
     });
   };
 
+  const submit = () => {
+    onSubmit(data);
+  };
+
   return (
     <div>
       <UpdateCategoryInput
@@ -41,7 +45,12 @@ export const UpdateCategory: FC<UpdateCategoryProps> = ({
       <FlatButton
         color="white"
         backgroundColor={CONSTANTS.PRIMARY_COLOR}
-        onClick={() => onSubmit(data)}
+        onClick={submit}
+        onKeyDown={(e) => {
+          if (e.key.toLowerCase() == 'enter') {
+            submit();
+          }
+        }}
         tabIndex={0}
       >
         Save

@@ -11,6 +11,7 @@ import { Spacer } from '../../layout';
 import { OpenCategoryActionsButton } from './category-actions';
 import { UpdateCategoryModal } from './update-category';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { ProgressBar } from '../../shared/progress-bar';
 
 const GoalsBase = styled.div``;
 
@@ -19,12 +20,13 @@ const DragContainer = styled.div`
 `;
 
 export const CategorySectionBase = styled.div`
-  background-color: rgba(0, 0, 0, 0.01);
-  padding: 0.7rem 1rem;
-  margin: 0 1rem;
+  background-color: rgba(0, 0, 0, 0.03);
+  padding: 0.7rem 1rem 1.2rem 1rem;
+  margin: 0 0.5rem;
   border-radius: 4px;
-  min-width: 20rem;
-  max-width: 20rem;
+  flex-shrink: 0;
+  width: 20rem;
+  max-width: 24rem;
 `;
 
 const CategorySectionHeader = styled.div`
@@ -34,6 +36,24 @@ const CategorySectionHeader = styled.div`
 
   display: flex;
   align-items: center;
+
+  h3 {
+    overflow-wrap: anywhere;
+  }
+`;
+
+const HeaderLeft = styled.div`
+  flex: 3;
+`;
+
+const HeaderRight = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+
+  & > *:not(:last-child) {
+    margin-right: 2px;
+  }
 `;
 
 interface CategorySectionProps {
@@ -58,18 +78,29 @@ export const CategorySection: FC<CategorySectionProps> = ({
   const [isNewOpen, setIsNewOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
 
+  const progress =
+    category.goals.reduce(
+      (prev, { isComplete }) => (isComplete ? prev + 1 : prev),
+      0
+    ) / category.goals.length;
+
   return (
     <React.Fragment>
       <CategorySectionBase>
         <CategorySectionHeader>
-          <h3>{category.name}</h3>
-          <Spacer width="1rem" />
-          <OpenCategoryActionsButton
-            onEdit={() => {
-              setIsUpdateOpen(true);
-            }}
-            onDelete={deleteCategory}
-          />
+          <HeaderLeft>
+            <h3>{category.name}</h3>
+            <Spacer width=".5rem" />
+          </HeaderLeft>
+          <HeaderRight>
+            <OpenCategoryActionsButton
+              onEdit={() => {
+                setIsUpdateOpen(true);
+              }}
+              onDelete={deleteCategory}
+            />
+            <ProgressBar progress={progress} />
+          </HeaderRight>
         </CategorySectionHeader>
 
         <Spacer height=".5rem" />

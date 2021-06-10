@@ -1,8 +1,10 @@
+import { CheckSquareOutlined } from '@ant-design/icons';
 import React, { FC } from 'react';
 import styled from 'styled-components';
 import { Category } from '../../../types';
 import { Spacer } from '../../layout';
 import { ProgressBar } from '../../shared/progress-bar';
+import * as CONSTANTS from '../../../constants';
 
 const SummaryItemBase = styled.div`
   * {
@@ -17,8 +19,20 @@ const SummaryItemBase = styled.div`
   margin-bottom: 1rem;
 `;
 
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
 const Title = styled.div`
   font-weight: 700;
+  overflow-wrap: anywhere;
+`;
+
+const HeaderIcon = styled.div`
+  flex-shrink: 0;
+  color: ${CONSTANTS.GREEN_COLOR};
 `;
 
 const Percentage = styled.div`
@@ -41,7 +55,17 @@ export const SummaryItem: FC<SummaryItemProps> = ({ category }) => {
 
   return (
     <SummaryItemBase>
-      <Title>{category.name}</Title>
+      <Header>
+        <Title>{category.name}</Title>
+        {progress == 1 && (
+          <React.Fragment>
+            <Spacer width="4px" />
+            <HeaderIcon>
+              <CheckSquareOutlined />
+            </HeaderIcon>
+          </React.Fragment>
+        )}
+      </Header>
       <Spacer height="3px" />
       <Percentage>
         <p>{progress ? (progress * 100).toFixed(1) : '0.00'}%</p>

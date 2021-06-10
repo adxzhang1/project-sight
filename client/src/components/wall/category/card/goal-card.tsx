@@ -6,6 +6,7 @@ import { UpdateCardModal } from './update-card';
 import { UpdateGoalParams } from '../../../../hooks';
 import { GoalCardActions } from './card-actions';
 import { CheckOutlined } from '@ant-design/icons';
+import * as CONSTANTS from '../../../../constants';
 
 export const GoalCardBase = styled.div`
   * {
@@ -28,6 +29,10 @@ export const GoalCardBase = styled.div`
   &:hover {
     opacity: 0.9;
   }
+`;
+
+const CardIcon = styled.div`
+  color: ${CONSTANTS.GREEN_COLOR};
 `;
 
 interface GoalCardProps {
@@ -54,7 +59,11 @@ export const GoalCard: FC<GoalCardProps> = ({ goal, onUpdate, onDelete }) => {
       >
         <GoalCardBase onClick={() => setIsDetailsOpen(true)}>
           <p style={{ overflowWrap: 'anywhere' }}>{goal.title}</p>
-          {goal.isComplete && <CheckOutlined />}
+          {goal.isComplete && (
+            <CardIcon>
+              <CheckOutlined />
+            </CardIcon>
+          )}
         </GoalCardBase>
       </Popover>
       <UpdateCardModal

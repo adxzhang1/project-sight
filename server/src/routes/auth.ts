@@ -127,12 +127,29 @@ export class AuthController {
       });
     }
   };
+
+  static delete: RequestHandler<{ id: string }> = async (req, res, next) => {
+    try {
+      const user = await UserModel.findOne({ _id: req.params.id });
+
+      if (!user) {
+        return res.status(200).json({});
+      }
+
+      await user.remove();
+
+      res.status(200).json(user);
+    } catch (err) {
+      next(err);
+    }
+  };
 }
 
 const router = Router();
 
 router.post('/signup', AuthController.create, AuthController.sign);
 router.post('/login', AuthController.login, AuthController.sign);
+router.delete('/user/:id', AuthController.delete);
 router.get('/secret', AuthController.verify, (req, res) =>
   res.status(200).json({ message: 'you found me' })
 );
